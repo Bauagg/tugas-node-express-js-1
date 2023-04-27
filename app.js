@@ -1,13 +1,17 @@
 const express = require("express")
+const path = require('path')
 const app = express();
-const router = require("./routes")
-const log = require("./middlewares/logger")
+const productRouter = require("./APP/product/routes")
+const productRouterV2 = require('./APP/product-v2/routes')
+const logger = require('morgan')
 
 // file utama
-app.use(log)
+app.use(logger('dev'))
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
-app.use(router)
+app.use('/publick', express.static(path.join(__dirname, 'uploads')))
+app.use('/api/v1', productRouter)
+app.use('/api/v2', productRouterV2)
 
 // membuat error
 app.use((req, res, next) => {
